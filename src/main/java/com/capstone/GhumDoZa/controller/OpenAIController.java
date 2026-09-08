@@ -6,6 +6,7 @@ import com.capstone.GhumDoZa.dto.openai.OpenAIResponse;
 import com.capstone.GhumDoZa.dto.ticket.TicketListDto;
 import com.capstone.GhumDoZa.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/openai")
+@ConditionalOnProperty(name = "openai.on", havingValue = "true")
 public class OpenAIController {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenAIController.class);
