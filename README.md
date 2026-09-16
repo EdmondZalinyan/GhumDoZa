@@ -22,26 +22,44 @@ There is no Spring Security filter chain. Login/register are application endpoin
 
 1. **JDK 25**
 2. **Maven** (or use `./mvnw` / `mvnw.cmd`)
-3. **PostgreSQL** running locally
+3. **Docker** (for Compose) **or** PostgreSQL locally
 4. An IDE (IntelliJ or Cursor/VS Code with Java support) with a **Lombok** plugin enabled
 
 ---
 
-## Local database setup
+## Database
 
-1. Create a database named `ghumdoza`.
-2. Match credentials in `src/main/resources/application.properties`:
+`docker-compose.yml` starts Postgres 18 as `db` (`ghumdoza` / `postgres` / `1234`). Inside the Compose network Postgres still listens on **5432**, which is what the backend uses (`jdbc:postgresql://db:5432/ghumdoza`).
 
+On the **host**, that port is published as **6789** (`6789:5432`). Use this from a local IDE, `psql`, pgAdmin, or DBeaver:
 
-Do not commit real secrets. 
+```text
+localhost:6789
+database: ghumdoza
+user: postgres
+password: 1234
+```
 
-3. Run schema SQL in a Postgres client (psql, pgAdmin, DBeaver):
+If you run the API on the host (`./mvnw spring-boot:run`) against Compose Postgres, point the datasource at `jdbc:postgresql://localhost:6789/ghumdoza` instead of `db:5432`.
 
-   - `src/main/resources/initialize.sql` — **drops and recreates** tables. Destructive. Use on a fresh local DB.
-   - `src/main/resources/data.sql` — sample users, teams, projects.
-   - `src/main/resources/demo-data.sql` — extra demo data if you need it.
+Do not commit real secrets.
 
-Hibernate is **not** configured to auto-create tables (`ddl-auto` is unset). If tables are missing, the app will fail at runtime when it hits the DB.
+Schema is applied by Flyway on startup (`src/main/resources/db/migration/V1__initialize.sql`). Optional seed scripts you can run in a Postgres client:
+
+- `src/main/resources/data.sql` — sample users, teams, projects.
+- `src/main/resources/demo-data.sql` — extra demo data if you need it.
+
+Hibernate is set to `validate` (it does not create or drop tables). Flyway owns schema changes.
+
+### Docker Compose
+
+From the repo root:
+
+```bash
+docker compose up --build
+```
+
+API: **http://localhost:8080**. Postgres from the host: **localhost:6789**.
 
 ---
 

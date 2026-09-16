@@ -1,14 +1,3 @@
---Clear the Database
-DROP TABLE IF EXISTS "team" CASCADE;
-DROP TABLE IF EXISTS "user" CASCADE;
-DROP TABLE IF EXISTS "team_user" CASCADE;
-DROP TABLE IF EXISTS "project_user" CASCADE;
-DROP TABLE IF EXISTS "project" CASCADE;
-DROP TABLE IF EXISTS "project_team" CASCADE;
-DROP TABLE IF EXISTS "ticket" CASCADE;
-DROP TABLE IF EXISTS "comment" CASCADE;
-
---Create the Database
 CREATE TABLE IF NOT EXISTS "user"
 (
     id         UUID PRIMARY KEY,
@@ -20,11 +9,11 @@ CREATE TABLE IF NOT EXISTS "user"
 
 CREATE TABLE IF NOT EXISTS "project"
 (
-    id          UUID PRIMARY KEY,
-    "name"      VARCHAR,
-    code        VARCHAR UNIQUE,
-    creator_id  UUID REFERENCES "user" (id),
-    description VARCHAR,
+    id                   UUID PRIMARY KEY,
+    "name"               VARCHAR,
+    code                 VARCHAR UNIQUE,
+    creator_id           UUID REFERENCES "user" (id),
+    description          VARCHAR,
     ticket_sequence_code INT DEFAULT 0
 );
 
