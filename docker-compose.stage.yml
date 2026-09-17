@@ -1,0 +1,28 @@
+name: ghumdoza_stage
+
+services:
+
+  backend-stage:
+    build: .
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: stage
+      STAGE_DB_USER: ${STAGE_DB_USER}
+      STAGE_DB_PASSWORD: ${STAGE_DB_PASSWORD}
+    depends_on:
+      - db-stage
+
+  db-stage:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: ghumdoza_stage
+      POSTGRES_USER: ${DEV_DB_USER}
+      POSTGRES_PASSWORD: ${DEV_DB_PASSWORD}
+    volumes:
+      - pgdata-stage:/var/lib/postgresql
+    ports:
+      - "6790:5432"
+
+volumes:
+  pgdata-stage:

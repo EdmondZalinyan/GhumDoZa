@@ -1,0 +1,27 @@
+name: ghumdoza_dev
+
+services:
+  backend-dev:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DEV_DB_USER: ${DEV_DB_USER}
+      DEV_DB_PASSWORD: ${DEV_DB_PASSWORD}
+    depends_on:
+      - db-dev
+
+  db-dev:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: ghumdoza_dev
+      POSTGRES_USER: ${DEV_DB_USER}
+      POSTGRES_PASSWORD: ${DEV_DB_PASSWORD}
+    volumes:
+      - pgdata-dev:/var/lib/postgresql
+    ports:
+      - "6789:5432"
+
+volumes:
+  pgdata-dev:
