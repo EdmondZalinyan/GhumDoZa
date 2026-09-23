@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - stage
+      - 'release/*'
+  pull_request:
+    branches:
+      - main
+      - dev
+      - stage
+      - 'release/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: run tests
+        run: mvn test
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Build Docker image
+        run: docker build -t ghumdoza-backend:${{ github.sha }} .
